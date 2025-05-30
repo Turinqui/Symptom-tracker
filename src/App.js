@@ -48,7 +48,7 @@ const handleSubmit = () => {
         {generalSymptoms.map(symptom => (
           <div key={symptom} className="mb-1">
             <label className="flex items-center">
-              <input type="checkbox" checked={!!todaySymptoms[symptom]}
+              <input type="checkbox" checked={todaySymptoms[symptom] === true}
                 onChange={() => handleCheckboxChange(symptom, "general")} className="mr-2" />
               {symptom}
             </label>
@@ -60,7 +60,7 @@ const handleSubmit = () => {
         {vaginalSymptoms.map(symptom => (
           <div key={symptom} className="mb-1">
             <label className="flex items-center">
-              <input type="checkbox" checked={!!vaginalToday[symptom]}
+              <input type="checkbox" checked={vaginalToday[symptom] === true}
                 onChange={() => handleCheckboxChange(symptom, "vaginal")} className="mr-2" />
               {symptom}
             </label>
