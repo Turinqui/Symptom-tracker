@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const generalSymptoms = [
   "Fatigue", "Fever", "Cough", "Congestion", "Headache",
@@ -11,24 +11,34 @@ const vaginalSymptoms = [
 ];
 
 export default function SymptomTracker() {
-  const [entries, setEntries] = useState([]);
-  const [todaySymptoms, setTodaySymptoms] = useState({});
-  const [vaginalToday, setVaginalToday] = useState({});
-  const [note, setNote] = useState("");
+  const [entries, setEntries] = useState(() => {
+  const saved = localStorage.getItem("symptomEntries");
+  return saved ? JSON.parse(saved) : [];
+});
 
-  const handleCheckboxChange = (symptom, type = "general") => {
-    const update = type === "general" ? todaySymptoms : vaginalToday;
-    const setter = type === "general" ? setTodaySymptoms : setVaginalToday;
-    setter({ ...update, [symptom]: !update[symptom] });
-  };
+const [todaySymptoms, setTodaySymptoms] = useState({});
+const [vaginalToday, setVaginalToday] = useState({});
+const [note, setNote] = useState("");
 
-  const handleSubmit = () => {
-    const date = new Date().toISOString().split("T")[0];
-    setEntries([...entries, { date, symptoms: todaySymptoms, vaginal: vaginalToday, note }]);
-    setTodaySymptoms({});
-    setVaginalToday({});
-    setNote("");
+// Save to localStorage anytime entries change
+useEffect(() => {
+  localStorage.setItem("symptomEntries", JSON.stringify(entries));
+}, [entries]);
+
+const handleSubmit = () => {
+  const date = new Date().toISOString().split("T")[0];
+  const newEntry = {
+    date,
+    symptoms: todaySymptoms,
+    vaginal: vaginalToday,
+    note
   };
+  setEntries([...entries, newEntry]);
+  setTodaySymptoms({});
+  setVaginalToday({});
+  setNote("");
+};
+
 
   return (
     <div className="p-4 max-w-xl mx-auto">
